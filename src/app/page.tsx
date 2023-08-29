@@ -32,6 +32,7 @@ function Home() {
     fetchJobs();
   }, []);
   return (
+    
     <div>
       <Filters filters={filters} setFilters={setFilters} getData={fetchJobs} />
       <Row>
