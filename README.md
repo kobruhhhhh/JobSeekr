@@ -1,4 +1,12 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# JobSeekr
+
+[Link!!](https://jobseekr.vercel.app/)
+
+
+## Tech Used
+
+![Tech](https://skills.thijs.gg/icons?i=nextjs,nodejs,ts,react,mongodb)
+
 
 ## Setup
 
