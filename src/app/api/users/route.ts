@@ -3,9 +3,8 @@ import { validateJWT } from "@/helpers/validateJWT";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
-connectDB();
-
 export async function PUT(request: NextRequest) {
+  await connectDB();
   try {
     await validateJWT(request);
 

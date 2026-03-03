@@ -69,6 +69,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+
+    // saved jobs for employees
+    savedJobs: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'jobs',
+      required: false,
+      default: []
+    },
   },
   {
     timestamps: true,

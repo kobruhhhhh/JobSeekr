@@ -1,8 +1,45 @@
 "use client";
 import { Button, Col, Form, Row, Space } from "antd";
 import React from "react";
+import { useSelector } from "react-redux";
 
 function EmployeeForm() {
+  const { mode } = useSelector((state: any) => state.theme);
+  const isDark = mode === "dark";
+
+  const inputStyle = {
+    backgroundColor: isDark ? "#0f172a" : "#ffffff",
+    color: isDark ? "#f3f4f6" : "#1f2937",
+    border: isDark ? "1px solid #334155" : "1px solid #d1d5db",
+    padding: "10px 12px",
+    borderRadius: "8px",
+    fontSize: "14px",
+    outline: "none",
+    transition: "all 0.3s ease",
+    width: "100%",
+  };
+
+  const textareaStyle = {
+    ...inputStyle,
+    minHeight: "100px",
+    resize: "vertical" as const,
+    fontFamily: "inherit",
+  };
+
+  const sectionTitleStyle = {
+    color: isDark ? "#e0e7ff" : "#213555",
+    fontSize: "18px",
+    fontWeight: "600",
+    marginBottom: "16px",
+  };
+
+  const deleteIconStyle = {
+    color: isDark ? "#ef4444" : "#dc2626",
+    cursor: "pointer",
+    fontSize: "20px",
+    transition: "all 0.3s ease",
+  };
+
   return (
     <>
       <Row gutter={[16, 16]}>
@@ -12,7 +49,7 @@ function EmployeeForm() {
             name="name"
             rules={[{ required: true, message: "Required" }]}
           >
-            <input type="text" />
+            <input type="text" style={inputStyle} />
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -21,17 +58,17 @@ function EmployeeForm() {
             name="email"
             rules={[{ required: true, message: "Required" }]}
           >
-            <input type="email" />
+            <input type="email" style={inputStyle} />
           </Form.Item>
         </Col>
         <Col span={8}>
           <Form.Item label="Phone" name="phone">
-            <input type="text" />
+            <input type="text" style={inputStyle} />
           </Form.Item>
         </Col>
         <Col span={24}>
           <Form.Item label="Carrier Objective" name="carrierObjective">
-            <textarea />
+            <textarea style={textareaStyle} />
           </Form.Item>
         </Col>
       </Row>
@@ -42,7 +79,7 @@ function EmployeeForm() {
           marginTop: 35,
         }}
       >
-        <h1 className="text-md">Education</h1>
+        <h1 style={sectionTitleStyle}>Education</h1>
         <Form.List name="education">
           {(fields, { add, remove }) => (
             <>
@@ -60,7 +97,7 @@ function EmployeeForm() {
                       ]}
                       label="Qualification"
                     >
-                      <input type="text" />
+                      <input type="text" style={inputStyle} />
                     </Form.Item>
                   </Col>
 
@@ -76,7 +113,7 @@ function EmployeeForm() {
                       ]}
                       label="Institution"
                     >
-                      <input type="text" />
+                      <input type="text" style={inputStyle} />
                     </Form.Item>
                   </Col>
 
@@ -92,13 +129,16 @@ function EmployeeForm() {
                       ]}
                       label="Percentage"
                     >
-                      <input type="text" />
+                      <input type="text" style={inputStyle} />
                     </Form.Item>
                   </Col>
 
                   <i
                     className="ri-delete-bin-line"
                     onClick={() => remove(name)}
+                    style={deleteIconStyle}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                   ></i>
                 </Row>
               ))}
@@ -118,7 +158,7 @@ function EmployeeForm() {
           marginTop: 35,
         }}
       >
-        <h1 className="text-md">Skills</h1>
+        <h1 style={sectionTitleStyle}>Skills</h1>
         <Form.List name="skills">
           {(fields, { add, remove }) => (
             <>
@@ -136,7 +176,7 @@ function EmployeeForm() {
                       ]}
                       label="Technology"
                     >
-                      <input type="text" />
+                      <input type="text" style={inputStyle} />
                     </Form.Item>
                   </Col>
 
@@ -152,13 +192,16 @@ function EmployeeForm() {
                       ]}
                       label="Rating"
                     >
-                      <input type="text" />
+                      <input type="text" style={inputStyle} />
                     </Form.Item>
                   </Col>
 
                   <i
                     className="ri-delete-bin-line"
                     onClick={() => remove(name)}
+                    style={deleteIconStyle}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                   ></i>
                 </Row>
               ))}
@@ -178,7 +221,7 @@ function EmployeeForm() {
           marginTop: 35,
         }}
       >
-        <h1 className="text-md">Experience</h1>
+        <h1 style={sectionTitleStyle}>Experience</h1>
         <Form.List name="experience">
           {(fields, { add, remove }) => (
             <>
@@ -196,7 +239,7 @@ function EmployeeForm() {
                       ]}
                       label="Company"
                     >
-                      <input type="text" />
+                      <input type="text" style={inputStyle} />
                     </Form.Item>
                   </Col>
 
@@ -212,7 +255,7 @@ function EmployeeForm() {
                       ]}
                       label="Role"
                     >
-                      <input type="role" />
+                      <input type="text" style={inputStyle} />
                     </Form.Item>
                   </Col>
 
@@ -228,13 +271,16 @@ function EmployeeForm() {
                       ]}
                       label="Period of Work"
                     >
-                      <input type="text" />
+                      <input type="text" style={inputStyle} />
                     </Form.Item>
                   </Col>
 
                   <i
                     className="ri-delete-bin-line"
                     onClick={() => remove(name)}
+                    style={deleteIconStyle}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                   ></i>
                 </Row>
               ))}

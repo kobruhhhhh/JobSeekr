@@ -1,30 +1,35 @@
 "use client";
 import PageTitle from "@/components/PageTitle";
-import { Button, Table, message } from "antd";
+import { Button, Table, Tooltip, App } from "antd";
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { SetLoading } from "@/redux/loadersSlice";
 import moment from "moment";
-import { Tooltip } from "antd";
 import Applications from "@/components/Applications";
 
+// Enable dynamic rendering
+export const dynamic = 'force-dynamic';
+
 function Jobs() {
+  const { message } = App.useApp();
   const [selectedJob = {}, setSelectedJob] = React.useState({} as any);
   const [showApplications = false, setShowApplications] =
-    React.useState<boolean>(false); // [1
+    React.useState<boolean>(false);
   const [jobs, setJobs] = React.useState([]);
   const { currentUser } = useSelector((state: any) => state.users);
   const dispatch = useDispatch();
   const router = useRouter();
+  const [hasLoaded, setHasLoaded] = React.useState(false);
 
   const fetchJobs = async () => {
+    if (!currentUser?._id) return;
     try {
       dispatch(SetLoading(true));
       const response = await axios.get(`/api/jobs?user=${currentUser._id}`);
-      console.log(response.data.data);
       setJobs(response.data.data);
+      setHasLoaded(true);
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -46,8 +51,11 @@ function Jobs() {
   };
 
   React.useEffect(() => {
-    fetchJobs();
-  }, []);
+    if (currentUser?._id && !hasLoaded) {
+      fetchJobs();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser?._id]);
 
   const columns = [
     {

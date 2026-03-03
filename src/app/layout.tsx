@@ -4,6 +4,7 @@ import "./../stylesheets/commonClasses.css";
 import "./../stylesheets/antdOverride.css";
 import "./../stylesheets/layout.css";
 import "./../stylesheets/loader.css";
+import "./../stylesheets/modernTheme.css";
 import ReduxProvider from "@/components/ReduxProvider";
 import { Metadata } from "next";
 

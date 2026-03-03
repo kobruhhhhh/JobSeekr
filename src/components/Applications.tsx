@@ -1,6 +1,6 @@
 "use client";
 import PageTitle from "@/components/PageTitle";
-import { Button, Modal, Table, message } from "antd";
+import { Button, Modal, Table, App } from "antd";
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +17,7 @@ function Applications({
   setShowApplications: (showApplications: boolean) => void;
   selectedJob: any;
 }) {
+  const { message } = App.useApp();
   const router = useRouter();
   const [applications, setApplications] = React.useState([]);
   const dispatch = useDispatch();

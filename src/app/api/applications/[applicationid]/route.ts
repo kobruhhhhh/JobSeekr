@@ -5,14 +5,17 @@ import Application from "@/models/applicationModel";
 import moment from "moment";
 import { NextRequest, NextResponse } from "next/server";
 
-connectDB();
-
-export async function PUT(request: NextRequest, { params }: any) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ applicationid: string }> }
+) {
+  await connectDB();
   try {
     validateJWT(request);
     const reqBody = await request.json();
+    const { applicationid } = await params;
     const application: any = await Application.findByIdAndUpdate(
-      params.applicationid,
+      applicationid,
       reqBody,
       {
         new: true,

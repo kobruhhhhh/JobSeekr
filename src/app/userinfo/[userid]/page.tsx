@@ -4,12 +4,13 @@ import { useRouter, useParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { SetLoading } from "@/redux/loadersSlice";
 import axios from "axios";
-import { message } from "antd";
+import { App } from "antd";
 import PageTitle from "@/components/PageTitle";
 import EmployerInfo from "@/components/EmployerInfo";
 import EmployeeInfo from "@/components/EmployeeInfo";
 
 function UserInfo() {
+  const { message } = App.useApp();
   const [userInfo, setUserInfo] = React.useState<any>(null);
   const { userid } = useParams();
   const dispatch = useDispatch();
@@ -28,8 +29,11 @@ function UserInfo() {
   };
 
   React.useEffect(() => {
-    fetchUserInfo();
-  }, []);
+    if (userid) {
+      fetchUserInfo();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userid]);
 
   return (
     userInfo && (

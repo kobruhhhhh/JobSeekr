@@ -2,19 +2,22 @@
 import React from "react";
 import { useRouter, useParams } from "next/navigation";
 import PageTitle from "@/components/PageTitle";
-import { Button, Form, message } from "antd";
+import { Button, Form, App } from "antd";
 import JobPostForm from "@/components/JobPostForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { SetLoading } from "@/redux/loadersSlice";
 
 function EditJob() {
+  const { message } = App.useApp();
   const [jobData, setJobData] = React.useState<any>(null);
   const router = useRouter();
 
   const { jobid } = useParams();
 
   const dispatch = useDispatch();
+  const { mode } = useSelector((state: any) => state.theme);
+  const isDark = mode === "dark";
 
   const onFinish = async (values: any) => {
     try {
@@ -43,12 +46,23 @@ function EditJob() {
   };
 
   React.useEffect(() => {
-    fetchJob();
-  }, []);
+    if (jobid) {
+      fetchJob();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobid]);
 
   return (
     jobData && (
-      <div>
+      <div style={{
+        backgroundColor: isDark ? "#1e293b" : "#ffffff",
+        padding: "24px",
+        borderRadius: "12px",
+        boxShadow: isDark 
+          ? "0 4px 12px rgba(0, 0, 0, 0.3)" 
+          : "0 4px 12px rgba(0, 0, 0, 0.08)",
+        transition: "all 0.3s ease",
+      }}>
         <div className="flex justify-between items-center">
           <PageTitle title="Edit Job Post" />
           <Button type="default" onClick={() => router.back()}>

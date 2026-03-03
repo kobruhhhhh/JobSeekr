@@ -3,9 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/userModel";
 import bcrypt from "bcryptjs";
 
-connectDB();
-
 export async function POST(request: NextRequest) {
+  await connectDB();
   try {
     const reqBody = await request.json();
 

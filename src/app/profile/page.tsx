@@ -2,7 +2,7 @@
 import EmployeeForm from "@/components/EmployeeForm";
 import EmployerForm from "@/components/EmployerForm";
 import PageTitle from "@/components/PageTitle";
-import { Button, Form, message } from "antd";
+import { Button, Form, App } from "antd";
 import axios from "axios";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,7 +10,10 @@ import { SetCurrentUser } from "@/redux/usersSlice";
 import { SetLoading } from "@/redux/loadersSlice";
 
 function Profile() {
+  const { message } = App.useApp();
   const { currentUser } = useSelector((state: any) => state.users);
+  const { mode } = useSelector((state: any) => state.theme);
+  const isDark = mode === "dark";
   const dispatch = useDispatch();
 
   const onFinish = async (values: any) => {
@@ -29,7 +32,15 @@ function Profile() {
   };
 
   return (
-    <div>
+    <div style={{
+      backgroundColor: isDark ? "#1e293b" : "#ffffff",
+      padding: "24px",
+      borderRadius: "12px",
+      boxShadow: isDark 
+        ? "0 4px 12px rgba(0, 0, 0, 0.3)" 
+        : "0 4px 12px rgba(0, 0, 0, 0.08)",
+      transition: "all 0.3s ease",
+    }}>
       <PageTitle title="Profile" />
       <Form layout="vertical" initialValues={currentUser} onFinish={onFinish}>
         {currentUser?.userType === "employer" ? (

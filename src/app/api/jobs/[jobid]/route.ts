@@ -3,12 +3,15 @@ import { validateJWT } from "@/helpers/validateJWT";
 import Job from "@/models/jobModel";
 import { NextRequest, NextResponse } from "next/server";
 
-connectDB();
-
-export async function GET(request: NextRequest, { params }: any) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ jobid: string }> }
+) {
+  await connectDB();
   try {
     validateJWT(request);
-    const job = await Job.findById(params.jobid).populate("user");
+    const { jobid } = await params;
+    const job = await Job.findById(jobid).populate("user");
     return NextResponse.json({
       message: "Job fetched successfully",
       data: job,
@@ -18,11 +21,16 @@ export async function GET(request: NextRequest, { params }: any) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: any) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ jobid: string }> }
+) {
+  await connectDB();
   try {
     validateJWT(request);
     const reqBody = await request.json();
-    const job = await Job.findByIdAndUpdate(params.jobid, reqBody, {
+    const { jobid } = await params;
+    const job = await Job.findByIdAndUpdate(jobid, reqBody, {
       new: true,
       runValidators: true,
     });
@@ -35,10 +43,15 @@ export async function PUT(request: NextRequest, { params }: any) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: any) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ jobid: string }> }
+) {
+  await connectDB();
   try {
     validateJWT(request);
-    const job = await Job.findByIdAndDelete(params.jobid);
+    const { jobid } = await params;
+    const job = await Job.findByIdAndDelete(jobid);
     return NextResponse.json({
       message: "Job deleted successfully",
       data: job,

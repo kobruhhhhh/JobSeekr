@@ -4,9 +4,8 @@ import { validateJWT } from "@/helpers/validateJWT";
 import Application from "@/models/applicationModel";
 import { NextRequest, NextResponse } from "next/server";
 
-connectDB();
-
 export async function POST(request: NextRequest) {
+  await connectDB();
   try {
     await validateJWT(request);
     const reqBody = await request.json();
@@ -44,6 +43,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  await connectDB();
   try {
     validateJWT(request);
 

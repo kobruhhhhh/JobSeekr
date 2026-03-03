@@ -2,15 +2,18 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import PageTitle from "@/components/PageTitle";
-import { Button, Form, message } from "antd";
+import { Button, Form, App } from "antd";
 import JobPostForm from "@/components/JobPostForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { SetLoading } from "@/redux/loadersSlice";
 
 function NewJob() {
+  const { message } = App.useApp();
   const router = useRouter();
   const dispatch = useDispatch();
+  const { mode } = useSelector((state: any) => state.theme);
+  const isDark = mode === "dark";
 
   const onFinish = async (values: any) => {
     try {
@@ -26,7 +29,15 @@ function NewJob() {
   };
 
   return (
-    <div>
+    <div style={{
+      backgroundColor: isDark ? "#1e293b" : "#ffffff",
+      padding: "24px",
+      borderRadius: "12px",
+      boxShadow: isDark 
+        ? "0 4px 12px rgba(0, 0, 0, 0.3)" 
+        : "0 4px 12px rgba(0, 0, 0, 0.08)",
+      transition: "all 0.3s ease",
+    }}>
       <div className="flex justify-between items-center">
         <PageTitle title="Post New Job" />
         <Button type="default" onClick={() => router.back()}>

@@ -2,17 +2,20 @@
 import React from "react";
 import { useRouter, useParams } from "next/navigation";
 import PageTitle from "@/components/PageTitle";
-import { Button, Col, Divider, Form, Row, message } from "antd";
-import JobPostForm from "@/components/JobPostForm";
+import { Button, Col, Divider, Row, App } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { SetLoading } from "@/redux/loadersSlice";
-import { profile } from "console";
+
+// Enable dynamic rendering
+export const dynamic = 'force-dynamic';
 
 function JobInfo() {
+  const { message } = App.useApp();
   const { currentUser } = useSelector((state: any) => state.users);
   const [jobData, setJobData] = React.useState<any>(null);
   const [applications = [], setApplications] = React.useState<any[]>([]);
+  const [isSaved, setIsSaved] = React.useState(false);
   const router = useRouter();
   const { jobid } = useParams();
   const dispatch = useDispatch();
@@ -42,10 +45,49 @@ function JobInfo() {
     }
   };
 
+  const fetchSavedStatus = async () => {
+    try {
+      const response = await axios.get('/api/users/savedjobs');
+      const savedJobs = response.data.data;
+      const isJobSaved = savedJobs.some((job: any) => job._id === jobid);
+      setIsSaved(isJobSaved);
+    } catch (error: any) {
+      // Silently fail if user hasn't saved any jobs yet
+      console.log(error.message);
+    }
+  };
+
+  const onSaveToggle = async () => {
+    try {
+      dispatch(SetLoading(true));
+      if (isSaved) {
+        // Unsave the job
+        await axios.delete(`/api/users/savedjobs?jobId=${jobid}`);
+        message.success('Job removed from saved list');
+        setIsSaved(false);
+      } else {
+        // Save the job
+        await axios.post('/api/users/savedjobs', { jobId: jobid });
+        message.success('Job saved successfully');
+        setIsSaved(true);
+      }
+    } catch (error: any) {
+      message.error(error.response?.data?.message || error.message);
+    } finally {
+      dispatch(SetLoading(false));
+    }
+  };
+
   React.useEffect(() => {
-    fetchJob();
-    fetchApplications();
-  }, []);
+    if (jobid && currentUser?._id) {
+      fetchJob();
+      fetchApplications();
+      if (currentUser.userType === 'employee') {
+        fetchSavedStatus();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobid, currentUser?._id]);
 
   const onApply = async () => {
     try {
@@ -56,6 +98,8 @@ function JobInfo() {
         status: "pending",
       });
       message.success(response.data.message);
+      // Refresh applications after applying
+      fetchApplications();
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -69,7 +113,7 @@ function JobInfo() {
         <PageTitle title={jobData.title} />
 
         <Row gutter={[16, 16]} className="gap-3">
-          <Col span={12} className="flex flex-col gap-2">
+          <Col xs={24} sm={24} md={12} lg={12} className="flex flex-col gap-2">
             <div className="flex justify-between">
               <span>Company</span>
               <span>{jobData.user?.name}</span>
@@ -108,22 +152,50 @@ function JobInfo() {
                 employer to respond.
               </span>
             )}
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-3" style={{
+              marginBottom: "12px",
+              fontSize: "13px",
+              color: "#64748b",
+              textAlign: "right",
+            }}>
               Optimize your Portfolio in Profile section for increased shortlisting opportunities
             </div>
-            <div className="flex justify-end gap-3">
-              <Button type="default" onClick={() => router.back()}>
+            <div className="flex justify-end flex-wrap" style={{
+              gap: "12px",
+            }}>
+              <Button
+                type="default"
+                onClick={() => router.back()}
+                style={{ minWidth: "90px" }}
+              >
                 Cancel
               </Button>
               <Button
                 type="default"
                 onClick={() => router.push(`/userinfo/${jobData.user._id}`)}
+                style={{
+                  minWidth: "140px",
+                  whiteSpace: "normal",
+                  height: "auto",
+                  padding: "8px 16px",
+                }}
               >
                 View Company Info
               </Button>
+              {currentUser.userType === 'employee' && (
+                <Button
+                  type={isSaved ? "primary" : "default"}
+                  icon={<i className={isSaved ? "ri-bookmark-fill" : "ri-bookmark-line"}></i>}
+                  onClick={onSaveToggle}
+                  style={{ minWidth: "90px" }}
+                >
+                  {isSaved ? "Saved" : "Save"}
+                </Button>
+              )}
               <Button
                 type="primary"
                 onClick={onApply}
+                style={{ minWidth: "90px" }}
                 disabled={
                   currentUser.userType === "employer" || applications.length > 0
                 }
